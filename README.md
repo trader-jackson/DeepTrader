@@ -1,6 +1,3 @@
-You're right, let's create a more visually appealing README.md file that's better formatted for GitHub:
-
-```markdown
 # DeepTrader
 
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/release/python-370/)
@@ -170,13 +167,3 @@ If you use this code in your research, please cite the original paper:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 ```
-
-This markdown version:
-1. Uses badges at the top
-2. Includes emojis to make sections more visually distinct
-3. Has better section headers with emoji icons
-4. Uses tables for the metrics section
-5. Has a more structured and visually appealing layout
-6. Uses code highlighting
-
-Just save this content to your README.md file, and it will look much better on GitHub. Note that there's a placeholder for an architecture image - if you have a diagram of the DeepTrader architecture, you could add it there.
