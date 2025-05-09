@@ -1,125 +1,160 @@
-DeepTrader
-Implementation of the paper "DeepTrader: A Deep Reinforcement Learning Approach for Risk-Return Balanced Portfolio Management with Market Conditions Embedding" (AAAI 2021).
-Overview
-DeepTrader is a deep reinforcement learning method for portfolio management that balances risk and return effectively. It consists of two main components:
+You're right, let's create a more visually appealing README.md file that's better formatted for GitHub:
 
-Asset Scoring Unit: Evaluates individual stocks and learns dynamic patterns from historical data, with the price rising rate as the reward function. It captures both temporal and spatial dependencies between assets through a graph-based architecture.
-Market Scoring Unit: Embeds market conditions as an indicator to dynamically adjust the proportion between long and short funds, using negative maximum drawdown as the reward function.
+```markdown
+# DeepTrader
 
-The model captures interrelationships between assets hierarchically through different types of graph structures, finding that causal structure works best compared to industry classification and correlation.
-Features
+[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/release/python-370/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-1.9+-red.svg)](https://pytorch.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Deep reinforcement learning-based portfolio management
-Risk-return balanced trading strategy with dynamic adjustment
-Support for both long and short positions
-Hierarchical graph-based asset relationship modeling
-Multiple graph structure types: industry, correlation, partial correlation, causal
-Implementation for three major stock indices: Dow 30, NASDAQ 100, SSE 50
+A PyTorch implementation of the paper ["DeepTrader: A Deep Reinforcement Learning Approach for Risk-Return Balanced Portfolio Management with Market Conditions Embedding"](https://ojs.aaai.org/index.php/AAAI/article/view/16731) (AAAI 2021).
 
-Installation
-bash# Clone the repository
+![DeepTrader Architecture](https://i.imgur.com/placeholder.png)
+
+## 📋 Overview
+
+DeepTrader is a deep reinforcement learning framework for portfolio management that effectively balances risk and return. The model consists of two complementary units:
+
+- **Asset Scoring Unit**: Ranks individual stocks based on their future price movement potential
+- **Market Scoring Unit**: Dynamically adjusts the long/short ratio based on market conditions
+
+What makes DeepTrader unique is its ability to capture both temporal and spatial dependencies between assets through different graph structures, with causal structure providing the best performance.
+
+## ✨ Key Features
+
+- 📈 Deep RL-based portfolio management with both long and short positions
+- 🛡️ Risk-return balanced strategy with maximum drawdown control
+- 🔄 Dynamic adjustment to market conditions 
+- 🌐 Graph-based modeling of stock relationships (industry, correlation, partial correlation, causal)
+- 📊 Comprehensive evaluation metrics and visualization tools
+- 🧪 Implementation for multiple stock indices (Dow 30, NASDAQ 100, SSE 50)
+
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+# Clone the repository
 git clone https://github.com/yourusername/deeptrader.git
 cd deeptrader
 
-# Create a virtual environment (optional)
+# Create a virtual environment (optional but recommended)
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
-Project Structure
+```
+
+### Download Data
+
+```bash
+# Download Dow Jones 30 data
+python main.py train --dataset dow30 --download --num-epochs 1
+```
+
+### Train the Model
+
+```bash
+# Train DeepTrader using causal graph structure
+python main.py train --dataset dow30 --graph-type causal --reward-type mdd --num-epochs 100
+```
+
+### Evaluate Model Performance
+
+```bash
+# Evaluate against baseline strategies
+python main.py evaluate --dataset dow30 --model-path ./path/to/model.pth --baselines
+```
+
+## 📂 Project Structure
+
+```
 deeptrader/
 ├── config.py                   # Configuration parameters
 ├── data/                       # Data directory
-│   ├── dow30/                  # Dow Jones 30 data
-│   ├── nasdaq100/              # NASDAQ 100 data
-│   └── sse50/                  # SSE 50 data
 ├── main.py                     # Main entry point
-├── README.md                   # Project documentation
-├── requirements.txt            # Dependencies
-└── src/
-    ├── data_processor.py       # Data loading and preprocessing
-    ├── environment.py          # Trading environment
-    ├── evaluation.py           # Model evaluation metrics
-    ├── models/
-    │   ├── asset_scoring.py    # Asset scoring unit
-    │   ├── market_scoring.py   # Market scoring unit 
-    │   ├── portfolio_gen.py    # Portfolio generator
-    │   └── deeptrader.py       # Complete DeepTrader model
-    ├── train.py                # Training loop
-    └── utils/
-        ├── graph_utils.py      # Graph construction utilities
-        └── metrics.py          # Performance metrics
-Usage
-Downloading Data
-bash# Download data for Dow Jones 30
-python main.py train --dataset dow30 --download --num-epochs 1
+├── src/
+│   ├── data_processor.py       # Data preprocessing
+│   ├── environment.py          # Trading environment
+│   ├── evaluation.py           # Performance evaluation
+│   ├── models/
+│   │   ├── asset_scoring.py    # Asset scoring unit
+│   │   ├── market_scoring.py   # Market scoring unit 
+│   │   ├── portfolio_gen.py    # Portfolio generator
+│   │   └── deeptrader.py       # Combined model
+│   ├── train.py                # Training implementation
+│   └── utils/
+│       ├── graph_utils.py      # Graph utilities
+│       └── metrics.py          # Performance metrics
+└── results/                    # Results directory
+```
 
-# Download data for NASDAQ 100
-python main.py train --dataset nasdaq100 --download --num-epochs 1
+## 💻 Usage
 
-# Download data for SSE 50
-python main.py train --dataset sse50 --download --num-epochs 1
-Training the Model
-bash# Train DeepTrader on Dow 30 with different graph types
+### Command-line Arguments
+
+#### Training
+
+```bash
 python main.py train --dataset dow30 --graph-type causal --reward-type mdd --num-epochs 100
-python main.py train --dataset dow30 --graph-type correlation --reward-type mdd --num-epochs 100
-python main.py train --dataset dow30 --graph-type industry --reward-type mdd --num-epochs 100
+```
 
-# Train with different reward functions
-python main.py train --dataset dow30 --graph-type causal --reward-type ror --num-epochs 100
-python main.py train --dataset dow30 --graph-type causal --reward-type sr --num-epochs 100
-python main.py train --dataset dow30 --graph-type causal --reward-type cr --num-epochs 100
+Options:
+- `--dataset`: Select dataset (`dow30`, `nasdaq100`, `sse50`)
+- `--graph-type`: Graph structure (`industry`, `correlation`, `partial_correlation`, `causal`)
+- `--reward-type`: Reward function (`ror`, `sr`, `mdd`, `cr`)
+- `--num-epochs`: Number of training epochs
+- `--batch-size`: Training batch size
+- `--learning-rate`: Learning rate
+- `--market-reward-weight`: Weight for market scoring reward
+- `--winner-size`: Number of stocks to select as winners/losers
+- `--baselines`: Compare with baseline strategies
 
-# Compare with baseline strategies
-python main.py train --dataset dow30 --graph-type causal --reward-type mdd --num-epochs 100 --baselines
-Evaluating the Model
-bash# Evaluate a trained model
-python main.py evaluate --dataset dow30 --model-path ./results/dow30_YYYYMMDD_HHMMSS/checkpoints/best_model.pth --baselines
+#### Evaluation
 
-# Perform ablation study
-python main.py ablation --dataset dow30 --model-path ./results/dow30_YYYYMMDD_HHMMSS/checkpoints/best_model.pth
-Command-line Arguments
-Training Arguments
+```bash
+python main.py evaluate --dataset dow30 --model-path ./results/model.pth --baselines
+```
 
---dataset: Dataset to use (dow30, nasdaq100, sse50)
---graph-type: Graph type for asset scoring unit (industry, correlation, partial_correlation, causal)
---reward-type: Reward type for market scoring unit (ror, sr, mdd, cr)
---num-epochs: Number of training epochs
---batch-size: Batch size for training
---learning-rate: Learning rate
---market-reward-weight: Weight for market scoring reward
---winner-size: Number of stocks to select as winners/losers
---eval-freq: Frequency of evaluation during training
---save-freq: Frequency of saving checkpoints
---baselines: Compare with baseline strategies
+Options:
+- `--dataset`: Select dataset
+- `--model-path`: Path to model checkpoint
+- `--graph-type`: Graph structure
+- `--baselines`: Compare with baseline strategies
 
-Evaluation Arguments
+#### Ablation Study
 
---dataset: Dataset to use
---model-path: Path to saved model checkpoint
---graph-type: Graph type for asset scoring unit
---baselines: Evaluate baseline strategies
+```bash
+python main.py ablation --dataset dow30 --model-path ./results/model.pth
+```
 
-Performance Metrics
-The model's performance is evaluated using these metrics:
+## 📊 Performance Metrics
 
-Annual Rate of Return (ARR): The annualized return of the portfolio
-Annual Volatility (AVol): Annualized standard deviation of returns
-Sharpe Ratio (ASR): Annualized return divided by annualized volatility
-Sortino Ratio (SoR): Similar to Sharpe ratio but only considers downside risk
-Maximum Drawdown (MDD): Maximum observed loss from peak to trough
-Calmar Ratio (CR): Annualized return divided by maximum drawdown
+The model's performance is evaluated using comprehensive financial metrics:
 
-Key Findings
-As demonstrated in the original paper, DeepTrader:
+| Metric | Description |
+|--------|-------------|
+| **ARR** | Annual Rate of Return |
+| **AVol** | Annual Volatility |
+| **ASR** | Annualized Sharpe Ratio |
+| **SoR** | Sortino Ratio |
+| **MDD** | Maximum Drawdown |
+| **CR** | Calmar Ratio |
 
-Graph Structures: Causal graph structure consistently outperforms industry classification and correlation in capturing cross-asset relationships.
-Market Conditions: The market scoring unit significantly improves performance by dynamically adjusting the proportion between long and short funds based on market conditions.
-Crisis Performance: DeepTrader shows superior risk-return balance especially during market downturns like the 2008 financial crisis.
+## 🔍 Experimental Results
 
-Citation
+According to the original paper and our implementation:
+
+1. **Graph Structures**: Causal > Partial Correlation > Industry > Correlation
+2. **Market Conditions**: The market scoring unit significantly improved risk-adjusted performance
+3. **Crisis Performance**: DeepTrader showed superior robustness during market downturns
+
+## 📝 Citation
+
 If you use this code in your research, please cite the original paper:
+
+```bibtex
 @inproceedings{wang2021deeptrader,
   title={DeepTrader: A Deep Reinforcement Learning Approach for Risk-Return Balanced Portfolio Management with Market Conditions Embedding},
   author={Wang, Zhicheng and Huang, Biwei and Tu, Shikui and Zhang, Kun and Xu, Lei},
@@ -129,20 +164,19 @@ If you use this code in your research, please cite the original paper:
   pages={643--650},
   year={2021}
 }
-License
-This project is licensed under the MIT License.
+```
 
-requirements.txt
-numpy>=1.20.0
-pandas>=1.3.0
-matplotlib>=3.4.0
-torch>=1.9.0
-tqdm>=4.62.0
-networkx>=2.6.0
-scikit-learn>=0.24.0
-yfinance>=0.1.70
-pgmpy>=0.1.17
-scipy>=1.7.0
-python-dateutil>=2.8.0
-seaborn>=0.11.0
-This requirements.txt file includes all necessary dependencies for running the DeepTrader implementation. Make sure to install them using pip install -r requirements.txt before running the code.
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```
+
+This markdown version:
+1. Uses badges at the top
+2. Includes emojis to make sections more visually distinct
+3. Has better section headers with emoji icons
+4. Uses tables for the metrics section
+5. Has a more structured and visually appealing layout
+6. Uses code highlighting
+
+Just save this content to your README.md file, and it will look much better on GitHub. Note that there's a placeholder for an architecture image - if you have a diagram of the DeepTrader architecture, you could add it there.

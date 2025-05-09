@@ -467,19 +467,38 @@ def prepare_dataloader(dataset: List[Dict], batch_size: int, shuffle: bool = Tru
         def __getitem__(self, idx):
             item = self.data[idx]
             
+            # Convert date to string to avoid collation issues
+            date_str = str(item["date"]) if isinstance(item["date"], pd.Timestamp) else item["date"]
+            
             return {
                 "stock_features": torch.tensor(item["stock_features"], dtype=torch.float32),
                 "market_features": torch.tensor(item["market_features"], dtype=torch.float32),
                 "target_returns": torch.tensor(item["target_returns"], dtype=torch.float32),
-                "date": item["date"]
+                "date": date_str  # Use string instead of Timestamp
             }
     
     dataset = FinancialDataset(dataset)
+    
+    # Define a custom collation function
+    def custom_collate(batch):
+        stock_features = torch.stack([item["stock_features"] for item in batch])
+        market_features = torch.stack([item["market_features"] for item in batch])
+        target_returns = torch.stack([item["target_returns"] for item in batch])
+        dates = [item["date"] for item in batch]
+        
+        return {
+            "stock_features": stock_features,
+            "market_features": market_features,
+            "target_returns": target_returns,
+            "date": dates
+        }
+    
     dataloader = torch.utils.data.DataLoader(
         dataset,
         batch_size=batch_size,
         shuffle=shuffle,
-        num_workers=0
+        num_workers=0,
+        collate_fn=custom_collate  # Use custom collation function
     )
     
     return dataloader
